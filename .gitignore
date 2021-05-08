@@ -62,7 +62,7 @@ node_modules/
 jspm_packages/
 typings/
 .npm
-app/.eslintcache
+.eslintcache
 .node_repl_history
 *.tgz
 .yarn-integrity

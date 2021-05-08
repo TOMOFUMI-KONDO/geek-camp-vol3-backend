@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import { v4 as uuidv4 } from 'uuid'
 import mysql from 'mysql'
 import express from 'express'
@@ -8,10 +10,10 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 //const mysql = require('mysql');
 const con = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'express_db', //追加
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASS,
+  database: process.env.DATABASE_NAME,
 })
 con.connect(function (err) {
   if (err) throw err
