@@ -68,6 +68,7 @@ app/.eslintcache
 .yarn-integrity
 .env
 .env.local
+.env.production
 .next
 dist
 .idea
