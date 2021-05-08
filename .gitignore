@@ -66,8 +66,8 @@ app/.eslintcache
 .node_repl_history
 *.tgz
 .yarn-integrity
-app/.env
+.env
 .env.local
 .next
-/dist
-/.idea
+dist
+.idea
