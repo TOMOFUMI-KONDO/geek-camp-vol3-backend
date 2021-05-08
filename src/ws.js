@@ -1,21 +1,11 @@
 import ws from 'ws'
 
-const server = new ws.Server({ port: 5001 })
+const socket = new ws.Server({ port: 5000 })
 
-// 接続時に呼ばれる
-server.on('connection', (ws) => {
-  // クライアントからのデータ受信時に呼ばれる
-  ws.on('message', (message) => {
-    console.log(message)
+socket.on('connection', (ws) => {
+  console.log('connected.')
+  ws.send('Hello from server.')
 
-    // クライアントにデータを返信
-    server.clients.forEach((client) => {
-      client.send(message)
-    })
-  })
-
-  // 切断時に呼ばれる
-  ws.on('close', () => {
-    console.log('close')
-  })
+  ws.on('message', (message) => ws.send(`Reply from server: ${message}.`))
+  ws.on('close', () => console.log('Disconnected.'))
 })
