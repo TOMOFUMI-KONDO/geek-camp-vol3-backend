@@ -77,21 +77,26 @@ app.get('/groups', (req, res) => {
 /*GET /users/{userId} Get specified user*/
 app.get('/users/:userId', (req, res) => {
   const sql =
-    'SELECT bg.user_id, u.name user_name, bg.group_id, g.name group_name, g.alarm FROM users u \
-        JOIN belong_groups bg ON u.id = bg.user_id \
-        JOIN `groups` g ON bg.group_id = g.id \
-        WHERE user_id = ?'
+    'SELECT u.id user_id, u.name user_name, bg.group_id, g.name group_name, g.alarm FROM users u \
+    LEFT JOIN belong_groups bg ON u.id = bg.user_id \
+    LEFT JOIN `groups` g ON bg.group_id = g.id \
+    WHERE u.id = ?'
+  console.log('sql ato')
   con.query(sql, [req.params.userId], function (err, result, fields) {
     if (err) throw err
     const base = []
     for (let i = 0; i < result.length; i++) {
-      base.push({ groupId: result[i].group_id, name: result[i].group_name, alarm: result[i].alarm })
+      if (result[i].group_id !== null) {
+        base.push({ groupId: result[i].group_id, name: result[i].group_name, alarm: result[i].alarm })
+      }
     }
+    console.log('for ato')
     res.json({
       userId: req.params.userId,
       name: result[0].user_name,
       groups: base,
     })
+    console.log('res ato')
   })
 })
 
@@ -110,4 +115,3 @@ app.use((error, _, res, __) => {
   console.error(error)
   res.status(500).json({ error })
 })
-
