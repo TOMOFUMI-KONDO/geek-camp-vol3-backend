@@ -64,3 +64,19 @@ app.get('/', (request, response) => {
 	response.send(result)
 	});
 });*/
+
+app.put('/groups/:groupId/join', (req, res) => {
+  const [userId, groupId] = [req.body.userId, req.params.groupId]
+  if (!userId || !groupId) res.sendStatus(400)
+
+  const sql = 'INSERT INTO belong_groups (user_id, group_id) VALUES (?, ?)'
+  con.query(sql, [req.body.userId, req.params.groupId], (error, _, __) => {
+    if (error) throw error
+    res.sendStatus(200)
+  })
+})
+
+app.use((error, _, res, __) => {
+  console.error(error)
+  res.status(500).json({ error })
+})
