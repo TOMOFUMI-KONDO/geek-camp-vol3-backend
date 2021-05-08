@@ -92,9 +92,17 @@ app.get('/groups', (req, res) => {
   const sql = 'SELECT * FROM `groups`'
   con.query(sql, function (err, result, fields) {
     if (err) throw err
+    console.log(result.length)
+
+    const base = []
+    for (let i = 0; i < result.length; i++) {
+      base.push({ groupId: result[i].id, name: result[i].name, alarm: result[i].alarm })
+    }
+    console.log(base)
+    res.json({
+      groups: base,
+    })
   })
-  console.log('これがカウント数')
-  console.log(result)
 })
 /*
 データ入手
