@@ -42,6 +42,7 @@ connection.query(
   'CREATE TABLE IF NOT EXISTS belong_groups (\
       user_id VARCHAR(255),\
       group_id VARCHAR(255),\
+      is_turned_off BOOLEAN DEFAULT false,\
       PRIMARY KEY(user_id, group_id),\
       FOREIGN  KEY (user_id) REFERENCES users(id),\
       FOREIGN  KEY (group_id) REFERENCES `groups`(id)\
