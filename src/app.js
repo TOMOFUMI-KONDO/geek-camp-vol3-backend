@@ -88,7 +88,14 @@ app.post('/groups', (req, res) => {
   })
 })
 /*GET /groups get all groups*/
-app.get('/groups')
+app.get('/groups', (req, res) => {
+  const sql = 'SELECT * FROM `groups`'
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err
+  })
+  console.log('これがカウント数')
+  console.log(result)
+})
 /*
 データ入手
 app.get('/', (request, response) => {
