@@ -1,6 +1,6 @@
 import ws from 'ws'
 
-const wss = new ws.Server({ port: 5000, path: '/groups/join' })
+const wss = new ws.Server({ port: 5000 })
 
 wss.on('connection', (ws) => {
   console.log('connected.')
