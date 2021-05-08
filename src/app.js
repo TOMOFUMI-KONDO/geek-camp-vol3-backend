@@ -45,6 +45,7 @@ app.delete('/:id',(req,res)=>{
 
 //データを入れる
 /*完成*/
+/*POST /users*/
 app.post('/users', (req, res) => {
   const sql = 'INSERT INTO users(id,name)VALUES(?,?)'
   const id = uuidv4()
@@ -54,7 +55,40 @@ app.post('/users', (req, res) => {
     res.json({ userId: id, name: req.body.name })
   })
 })
+/*POST /groups create group*/
+app.post('/groups', (req, res) => {
+  const sql = 'INSERT INTO `groups`(id,name,alarm) VALUES (?,?,?)'
+  const id = uuidv4()
 
+  con.query(sql, [id, req.body.name, req.body.alarm], function (err, result, fields) {
+    if (err) throw err
+    console.log(result)
+    //res.json({groupId: id, name: req.body.name, alarm: req.body.time,users:[userId: req.body.userId,]})
+  })
+  const sql2 = 'INSERT INTO belong_groups(user_id,group_id) VALUES (?,?)'
+  con.query(sql2, [req.body.userId, id], function (err, result, fields) {
+    if (err) throw err
+    console.log(result)
+  })
+  const sql3 = 'SELECT name FROM users WHERE id = ?'
+  con.query(sql3, [req.body.userId], function (err, result, fields) {
+    if (err) throw err
+    console.log(result[0].name)
+    res.json({
+      groupId: id,
+      name: req.body.name,
+      alarm: req.body.time,
+      users: [
+        {
+          userId: req.body.userId,
+          name: result[0].name,
+        },
+      ],
+    })
+  })
+})
+/*GET /groups get all groups*/
+app.get('/groups')
 /*
 データ入手
 app.get('/', (request, response) => {
