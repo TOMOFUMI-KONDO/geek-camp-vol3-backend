@@ -45,6 +45,7 @@ app.delete('/:id',(req,res)=>{
 
 //データを入れる
 /*完成*/
+/*POST /users*/
 app.post('/users', (req, res) => {
   const sql = 'INSERT INTO users(id,name)VALUES(?,?)'
   const id = uuidv4()
@@ -54,7 +55,75 @@ app.post('/users', (req, res) => {
     res.json({ userId: id, name: req.body.name })
   })
 })
+/*POST /groups create group*/
+app.post('/groups', (req, res) => {
+  const sql = 'INSERT INTO `groups`(id,name,alarm) VALUES (?,?,?)'
+  const id = uuidv4()
 
+  con.query(sql, [id, req.body.name, req.body.alarm], function (err, result, fields) {
+    if (err) throw err
+    console.log(result)
+    //res.json({groupId: id, name: req.body.name, alarm: req.body.time,users:[userId: req.body.userId,]})
+  })
+  const sql2 = 'INSERT INTO belong_groups(user_id,group_id) VALUES (?,?)'
+  con.query(sql2, [req.body.userId, id], function (err, result, fields) {
+    if (err) throw err
+    console.log(result)
+  })
+  const sql3 = 'SELECT name FROM users WHERE id = ?'
+  con.query(sql3, [req.body.userId], function (err, result, fields) {
+    if (err) throw err
+    console.log(result[0].name)
+    res.json({
+      groupId: id,
+      name: req.body.name,
+      alarm: req.body.time,
+      users: [
+        {
+          userId: req.body.userId,
+          name: result[0].name,
+        },
+      ],
+    })
+  })
+})
+/*GET /groups get all groups*/
+app.get('/groups', (req, res) => {
+  const sql = 'SELECT * FROM `groups`'
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err
+    console.log(result.length)
+
+    const base = []
+    for (let i = 0; i < result.length; i++) {
+      base.push({ groupId: result[i].id, name: result[i].name, alarm: result[i].alarm })
+    }
+    console.log(base)
+    res.json({
+      groups: base,
+    })
+  })
+})
+/*GET /users/{userId} Get specified user*/
+app.get('/users/:userId', (req, res) => {
+  const sql =
+    'SELECT bg.user_id, u.name user_name, bg.group_id, g.name group_name, g.alarm FROM users u \
+        JOIN belong_groups bg ON u.id = bg.user_id \
+        JOIN `groups` g ON bg.group_id = g.id \
+        WHERE user_id = ?'
+  con.query(sql, [req.params.userId], function (err, result, fields) {
+    if (err) throw err
+    const base = []
+    for (let i = 0; i < result.length; i++) {
+      base.push({ groupId: result[i].group_id, name: result[i].group_name, alarm: result[i].alarm })
+    }
+    res.json({
+      userId: req.params.userId,
+      name: result[0].user_name,
+      groups: base,
+    })
+  })
+})
 /*
 データ入手
 app.get('/', (request, response) => {
