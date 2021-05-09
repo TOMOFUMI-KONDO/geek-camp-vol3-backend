@@ -17,6 +17,14 @@ connection.connect(function (err) {
 
 const wss = new ws.Server({ port: 5000 })
 
+const setTurnedOff = (userId, groupId) => {
+  const sql1 = 'UPDATE belong_groups SET is_turned_off = true WHERE user_id = ? AND group_id = ?'
+  connection.query(sql1, [userId, groupId], (error, result, fields) => {
+    if (error) throw error
+    console.log('Set is_turned_off true.')
+  })
+}
+
 wss.on('connection', (ws) => {
   console.log('WebSocket connected.')
   ws.send('successfully connected')
@@ -28,11 +36,7 @@ wss.on('connection', (ws) => {
       return
     }
 
-    const sql1 = 'UPDATE belong_groups SET is_turned_off = true WHERE user_id = ? AND group_id = ?'
-    connection.query(sql1, [userId, groupId], (error, result, fields) => {
-      if (error) throw error
-      console.log('Set is_turned_off true.')
-    })
+    setTurnedOff(userId, groupId)
 
     const sql2 = 'SELECT is_turned_off FROM belong_groups WHERE group_id = ?'
     connection.query(sql2, [groupId], (error, result, fields) => {

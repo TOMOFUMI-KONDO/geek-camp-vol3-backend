@@ -113,5 +113,5 @@ app.put('/groups/:groupId/join', (req, res) => {
 
 app.use((error, _, res, __) => {
   console.error(error)
-  res.status(500).json({ error })
+  res.status(500).json({ error: error.toString() })
 })
