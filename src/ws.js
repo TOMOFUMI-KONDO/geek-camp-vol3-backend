@@ -31,6 +31,7 @@ wss.on('connection', (ws) => {
 
   ws.on('message', (message) => {
     const [userId, groupId] = message.split(',')
+    console.log(userId, groupId)
     if (!userId || !groupId) {
       ws.send('invalid request')
       return
