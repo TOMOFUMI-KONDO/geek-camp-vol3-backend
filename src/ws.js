@@ -50,6 +50,9 @@ wss.on('connection', (ws) => {
         wss.clients.forEach((c) => {
           if (c.readyState === ws.OPEN) c.send(`all awake`)
         })
+        connection.query('UPDATE belong_groups SET is_turned_off = false', [], (error, result, fields) => {
+          if (error) throw error
+        })
       } else {
         console.log('There are still sleeping people.')
         ws.send(`remain sleeper`)
