@@ -27,7 +27,7 @@ app.post('/users', (req, res) => {
   con.query(sql, [id, req.body.name], function (err, result, fields) {
     if (err) throw err
     console.log(result)
-    res.json({ userId: id, name: req.body.name })
+    res.status(201).json({ userId: id, name: req.body.name })
   })
 })
 
@@ -45,7 +45,7 @@ app.post('/groups', (req, res) => {
   const sql3 = 'SELECT name FROM users WHERE id = ?'
   con.query(sql3, [req.body.userId], function (err, result, fields) {
     if (err) throw err
-    res.json({
+    res.status(201).json({
       groupId: id,
       name: req.body.name,
       alarm: req.body.time,
